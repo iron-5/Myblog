@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>标签和分类</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.css">
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <link rel="stylesheet" href="../../css/my.css">
+</head>
+
+<body>
+    <!-- 导航 -->
+    <nav class="ui segment top attached my-shadow-small">
+        <div class="ui container">
+            <div class="ui menu stackable">
+                <div class="item my-font-max my-font-blod my-font-dark">
+                    Admin
+                </div>
+                <a href="/admin/blog/" class="item my-font-light my-font-blod my-font-large "><i class="icon book"></i>博客</a>
+                <a href="/admin/type/" class="item my-font-light my-font-blod my-font-large active"><i class="icon flag"></i>分类及标签</a>
+                               
+                <div class="right menu">
+                    <div class="ui dropdown item">
+                        <div class="text">
+                            <img class="ui avatar image" src="https://picsum.photos/100/100.jpg">
+                                iron-5
+                        </div>
+                        <i class="dropdown icon"></i>
+                        <div class="menu">
+                            <a class="item" >注销 </a>
+                        </div>
+                    </div>
+    
+                </div>
+            </div>
+        </div>
+    </nav>
+
+
+    <div class="my-container" id="container">
+        <div class="ui container">
+            <div class="ui two column divided stackable grid">
+
+                <div class="stretched row">
+                    <!-- 左边分类管理 -->
+                    <div class="column">
+                        <div class="ui top attached segment green">
+                            <div class="ui middle aligned two column grid">
+                                <div class="column">
+                                    <h3 class="ui header">分类</h3>
+                                </div>
+                                <div class="right aligned column">
+                                    共<h2 class="my-inline-block ui header teal ">{{types.length}}</h2>个
+                                </div>
+                            </div>
+                        </div>
+                        <table class="ui table attached striped ">
+                            <thead>
+                                <tr>
+                                    <th class="center aligned">序号</th>
+                                    <th class="center aligned">名称</th>
+                                    <th class="center aligned">操作</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="center aligned" v-for="(type,index) in types">
+                                    <td>{{index+1}}</td>
+                                    <td>{{type.typeName}}</td>
+                                    <td> 
+                                        <a :href="deleteType(type)" class="ui button basic red my-lr-margin-small mini">删除</a>
+                                        <button class="ui button basic teal mini editType" type="button" @click="editType(type)">编辑</button>
+                                    </td>
+                                </tr>
+
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <th colspan="3">
+                                        <div class="ui pagination menu teal">
+                                            <a class=" item">
+                                                上一页
+                                            </a>
+                                            <a class="active item">
+                                                1
+                                            </a>
+                                            <div class="disabled item">
+                                                ...
+                                            </div>
+                                            <a class="item">
+                                                10
+                                            </a>
+                                            <a class=" item">
+                                                下一页
+                                            </a>
+                                        </div>
+                                        <a class="ui green button basic right floated" id="addType" @click="addType">新增</a>
+                                    </th>
+                                </tr>
+                            </tfoot>
+                        </table>
+                        <div class="ui segment attached" style="display: none;" id="type">
+                            <form action="">
+                                <input type="hidden" v-model="curType.typeId">
+                                    <div class="ui input icon">
+                                        <input type="text" class="ui input" :placeholder="curType.typeId==''?'请输入名称..':curType.typeName" v-model="curType.typeId==''?'':curType.typeName">
+                                        <i class="icon edit"></i>
+                                    </div>
+                                    
+                                    <div class="ui buttons right floated">
+                                        <button class="ui button" type="button" id="cancel" @click="cancel">取消</button>
+                                        <div class="or"></div>
+                                        <button class="ui positive button" type="button" @click="saveType">保存</button>
+                                      </div>                      
+                              </form>
+                        </div>
+                    </div>
+<!--                     右边标签管理-->
+                    <div class="column" id="right">
+                        <div class="ui top attached segment teal">
+                            <div class="ui middle aligned two column grid">
+                                <div class="column">
+                                    <h3 class="ui header">标签</h3>
+                                </div>
+                                <div class="right aligned column">
+                                    共<h2 class="my-inline-block ui header teal ">{{tags.length}}</h2>个
+                                </div>
+                            </div>
+                        </div>
+                        <table class="ui table attached striped ">
+                            <thead>
+                                <tr>
+                                    <th class="center aligned">序号</th>
+                                    <th class="center aligned">名称</th>
+                                    <th class="center aligned">操作</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="center aligned" v-for="(tag,index) in tags">
+                                    <td>{{index+1}}</td>
+                                    <td>{{tag.tagName}}</td>
+                                    <td>
+                                        <a :href="deleteTag(tag)" class="ui button basic red my-lr-margin-small mini">删除</a>
+                                        <button  class="ui button basic teal mini editTag" type="button" @click="editTag(tag)">编辑</button>
+                                    </td>
+                                </tr>
+
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <th colspan="3">
+                                        <div class="ui pagination menu teal">
+                                            <a class=" item">
+                                                上一页
+                                            </a>
+                                            <a class="active item">
+                                                1
+                                            </a>
+                                            <div class="disabled item">
+                                                ...
+                                            </div>
+                                            <a class="item">
+                                                10
+                                            </a>
+                                            <a class=" item">
+                                                下一页
+                                            </a>
+                                        </div>
+                                        <a  class="ui green button basic right floated"
+                                            id="addTag" @click="addTag">新增
+                                        </a>
+
+                                    </th>
+                                </tr>
+                            </tfoot>
+                        </table>
+                        <div class="ui segment attached" style="display: none;" id="tag">
+                            <form action="">
+                                <input type="hidden" v-model="curTag.tagId">
+                                <div class="ui input icon">
+                                    <input type="text" class="ui input" :placeholder="curTag.tagId==''?'请输入名称..':curTag.tagName" v-model="curTag.tagId==''?'':curTag.tagName">
+                                    <i class="icon edit"></i>
+                                </div>
+
+                                <div class="ui buttons right floated">
+                                    <button class="ui button" type="button" id="cancelTag" @click="cancelTag">取消</button>
+                                    <div class="or"></div>
+                                    <button class="ui positive button" type="button" @click="saveTag">保存</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+        
+    </div>
+
+    <script src="../../js/jquery-3.5.1.min.js"></script>
+    <script src="../../semanticUI/semantic.min.js"></script>
+    <script>
+        const container = new Vue({
+            el:"#container",
+            data:{
+                tags:'',
+                types:'',
+                curType: {
+                    typeId:'',
+                    typeName:'请输入名称...'
+                },
+                curTag:{
+                    tagId:'',
+                    tagName:'请输入名称...'
+                }
+            },
+            methods:{
+                getTypes(){
+                    let _this = this;
+
+                    axios.get("/admin/type/getTypes").then(
+                        function(response){
+                            _this.types = response.data;
+                        }
+                    )
+                },
+                addType(){
+                    this.curType.typeId = '';
+                    this.curType.typeName = "请输入名称...";
+                    $("#type").attr("style", "display:block");
+                },
+                saveType(){
+                    let _this=this;
+                    console.log(this.curType);
+                    axios.post("/admin/type/saveType",this.curType).then(
+                        function(response){
+                            _this.getTypes();
+                            _this.getTags();
+                            _this.curType.typeId = null;
+                            _this.curType.typeName = "请输入名称...";
+                            $("#type").attr("style", "display:none");
+                        }
+                    )
+                },
+                editType(type){
+                    $("#type").attr("style", "display:block");
+                    this.curType.typeId = type.typeId;
+                    this.curType.typeName = type.typeName;
+                },
+                /*=============================*/
+                addTag(){
+                    this.curTag.typeId = '';
+                    this.curTag.typeName = "请输入名称...";
+                    $("#tag").attr("style", "display:block");
+                },
+                saveTag(){
+                    let _this=this;
+                    axios.post("/admin/tag/savaTag",this.curTag).then(
+                        function(response){
+                            _this.getTags();
+                            _this.curTag.tagId = null;
+                            _this.curTag.tagName = "请输入名称...";
+                            $("#tag").attr("style", "display:none");
+                        }
+                    )
+                },
+                editTag(tag){
+                    this.curTag.tagId = tag.tagId;
+                    this.curTag.tagName = tag.tagName;
+                    $("#tag").attr("style", "display:block");
+
+                },
+
+                getTags(){
+                    let _this = this;
+                    axios.get("/admin/tag/getTags").then(
+                        function(response){
+                            _this.tags = response.data;
+                        }
+                    )
+                },
+                deleteType(type){
+                    return '/admin/type/deleteType?typeId=' + type.typeId;
+                },
+                deleteTag(tag){
+                    return '/admin/tag/deleteTag?tagId=' + tag.tagId;
+                },
+                cancel(){
+                    $("#type").attr("style", "display: none;");
+                    this.curType.typeId = '';
+                    this.curType.typeName = "请输入名称...";
+                    console.log(this.curType);
+                },
+                cancelTag(){
+                    $("#tag").attr("style", "display: none;");
+                    this.curTag.tagId = '';
+                    this.curTag.tagName = "请输入名称...";
+                    console.log(this.curTag);
+                }
+            },
+            mounted(){
+
+                this.getTags();
+                this.getTypes();
+            }
+        })
+    </script>
+    <script>
+        // $('#addType').click(function(){
+        //
+        //     $("#type").attr("style", "display:block");
+        // })
+        // $("#cancel").click(function(){
+        //     $("#type").attr("style", "display: none;");
+        // })
+        // // $('#addTag').click(function(){
+        // //
+        // //     $("#tag").attr("style", "display:block");
+        // // })
+        // $("#cancelTag").click(function(){
+        //     $("#tag").attr("style", "display: none;");
+        // })
+        // $(".editType").click(function(obj){
+        //     $("#type").attr("style", "display:block");
+        // })
+        // $(".editTag").click(function(obj){
+        //     $("#tag").attr("style", "display:block");
+        // })
+            
+    </script>
+</body>
+
+</html>

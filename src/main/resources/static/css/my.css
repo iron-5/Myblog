@@ -1,0 +1,202 @@
+/* body{
+    background-image: url("../img/trees.png") !important;
+    background-repeat:no-repeat !important;
+    background-attachment: fixed !important; 
+    background-origin: border-box !important; 
+    background-size:cover !important; 
+} */
+
+/* 首页背景图的样式 */
+.my-side-banner{
+    height: 600px !important;
+}
+.my-side-banner-bg{
+    background-image: url("../img/th.jpg");
+    background-size: cover;
+    width: 100% !important;
+    height: 100% !important;
+}
+/* 
+中间容器
+ */
+.my-container{
+    margin: 5em 5em !important;
+}
+.my-container-max{
+    margin: 6em 10em !important;
+}
+/* 上下margin
+mini 0.5em
+tini 0.7em
+small 1em
+middle 2em
+large 3em
+big 4em
+huge 5em
+max 6em
+*/
+.my-tb-margin-mini{
+    margin-top: 0.5em !important;
+    margin-bottom: 0.5em !important;
+}
+.my-tb-margin-tiny{
+    margin-top: 0.7em !important;
+    margin-bottom: 0.7em !important;
+}
+.my-tb-margin-small{
+    margin-top: 1em !important;
+    margin-bottom: 1em !important;
+}
+.my-tb-margin-middle{
+    margin-top: 2em !important;
+    margin-bottom: 2em !important;
+}
+.my-tb-margin-large{
+    margin-top: 3em !important;
+    margin-bottom: 3em !important;
+}
+.my-tb-margin-big{
+    margin-top: 4em !important;
+    margin-bottom: 4em !important;
+}
+.my-tb-margin-huge{
+    margin-top: 5em !important;
+    margin-bottom: 5em !important;
+}
+.my-tb-margin-max{
+    margin-top: 6em !important;
+    margin-bottom: 6em !important;
+}
+
+/* 左右margin */
+.my-lr-margin-mini{
+    margin-left: 0.5em !important;
+    margin-right: 0.5em !important;
+}
+.my-lr-margin-small{
+    margin-left: 1em !important;
+    margin-right: 1em !important;
+}
+.my-lr-margin-middle{
+    margin-left: 2em !important;
+    margin-right: 2em !important;
+}
+.my-lr-margin-large{
+    margin-left: 3em !important;
+    margin-right: 3em !important;
+}
+.my-lr-margin-big{
+    margin-left: 4em !important;
+    margin-right: 4em !important;
+}
+.my-lr-margin-huge{
+    margin-left: 5em !important;
+    margin-right: 5em !important;
+}
+.my-lr-margin-max{
+    margin-left: 6em !important;
+    margin-right: 6em !important;
+}
+/* 左右padding */
+.my-lr-padding-mini{
+    padding-left: 0.5em !important;
+    padding-right: 0.5em !important;
+}
+.my-lr-padding-tiny{
+    padding-left: 0.7em !important;
+    padding-right: 0.7em !important;
+}
+.my-lr-padding-middle{
+    padding-left: 1em !important;
+    padding-right: 1em !important;
+}
+.my-lr-padding-large{
+    padding-left: 2em !important;
+    padding-right: 2em !important;
+}
+.my-lr-padding-big{
+    padding-left: 3em !important;
+    padding-right: 3em !important;
+}
+.my-lr-padding-max{
+    padding-left: 6em !important;
+    padding-right: 6em !important;
+}
+/* 上下左右margin */
+.my-margin-mini{
+    margin: 0.5em 0.5em !important;
+}
+.my-margin-tiny{
+    margin: 0.7em 0.7em !important;
+}
+.my-margin-small{
+   margin: 1em 1em !important;
+}
+/*  */
+.my-inline-block{
+    display: inline-block;
+}
+/* 
+字体加粗
+ */
+.my-font-blod{
+font-weight: bolder !important;
+}
+/*  */
+.my-font-large{
+    font-size: 15px !important;
+    }
+.my-font-max{
+    font-size: 20px !important;
+}
+/* 
+字体调色-主要针对a链接
+ */
+ .my-font-dark{
+    color: #1d953f !important;
+ }
+ .my-font-light{
+    color: #7fb80e !important;
+ }
+ .my-shadow-small{
+    box-shadow: 0 4px  8px  rgba(0, 0, 0,0.3) !important;
+}
+.my-right-fix-btn{
+    position: fixed !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    z-index: 10;
+}
+/* 
+适应移动端
+ */
+@media only screen and ( max-width: 640px ) {
+    .my-container {
+      padding-left: 1em !important;
+      padding-right: 1em !important;
+      margin: 2em 0 !important;      
+    }
+    .my-container-max{
+        padding-left: 1em !important;
+        padding-right: 1em !important;
+        margin: 2em 0 !important;  
+    }
+    .my-lr-padding-max{
+        padding-left: 1em !important;
+        padding-right: 1em !important;
+        margin: 2em 0 !important; 
+    }
+    .my-side-banner{
+        display: none;
+
+    }
+    /* .my-mobile-nav{
+        display: block !important;
+        margin-top: 2em !important;
+        margin-left: 2em !important;
+    }
+    nav{
+        display: none;
+    }
+     */
+  }

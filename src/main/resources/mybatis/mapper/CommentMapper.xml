@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="comment">
+    <resultMap id="blogCommentMap" type="comment">
+        <id property="commentId" column="comment_id"/>
+        <result property="commentNickname" column="comment_nickname"/>
+        <result property="email" column="email"/>
+        <result property="avatar" column="avatar"/>
+        <result property="content" column="content"/>
+        <result property="createTime" column="create_time"/>
+        <association property="parentComment" javaType="comment">
+            <id property="commentId" column="comment_id"/>
+        </association>
+        <association property="blog" javaType="blog">
+            <id property="blogId" column="blog_id"/>
+        </association>
+    </resultMap>
+    <select id="selectAllComments" resultMap="blogCommentMap">
+        select * from t_comment ;
+    </select>
+    <insert id="saveComment">
+        insert into t_comment(comment_nickname, content, avatar,
+                    email,create_time,parent_comment_id,blog_id, )
+                values (#{commentNickname}, #{content},#{avatar}, #{email},
+                        #{createTime}, #{parentComment.commentId}, #{blog.blogId})
+    </insert>
+    <select id="selectChildComment" resultMap="blogCommentMap">
+        select * from t_comment where parent_comment_id = #{commentId}
+    </select>
+</mapper>

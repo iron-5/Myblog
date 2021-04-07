@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.myblog3.mapper.BlogMapper">
+    <resultMap id="blogResultMap" type="Blog">
+        <id property="blogId" column="blog_id"/>
+        <result property="title" column="title"></result>
+        <result property="blogContent" column="blog_content"></result>
+        <result property="description" column="description"></result>
+        <result property="firstImg" column="first_img"></result>
+        <result property="isRecommended" column="is_recommended"></result>
+        <result property="isPublished" column="is_published"></result>
+        <result property="createTime" column="create_time"></result>
+        <result property="updateTime" column="update_time"></result>
+        <result property="flag" column="flag"></result>
+        <result property="viewCount" column="view_count"></result>
+
+<!--        <association property="user" javaType="User">-->
+<!--            <id property="userId" column="user_id"/>-->
+<!--            <result property="userNickname" column="user_nickname"></result>-->
+<!--            <result property="password" column="password"></result>-->
+<!--            <result property="avatar" column="avatar"></result>-->
+<!--            <result property="createTime" column="create_time"></result>-->
+<!--            <result property="email" column="email"></result>-->
+<!--            <result property="email" column="email"></result>-->
+<!--        </association>-->
+        <association property="type" javaType="Type">
+            <id property="typeId" column="type_id"/>
+            <result property="typeName" column="type_name"/>
+        </association>
+        <collection property="tags" ofType="tag">
+            <id property="tagId" column="tag_id"/>
+            <result property="tagName" column="tag_name"/>
+        </collection>
+
+    </resultMap>
+    <insert id="saveBlog" useGeneratedKeys="true" keyProperty="blogId">
+        INSERT  INTO t_blog(title, blog_content, description, first_img,
+                            is_recommended, is_published,  create_time,
+                            flag,view_count, user_id,type_id)
+                VALUES (#{title}, #{blogContent},#{description},#{firstImg},
+                        #{isRecommended}, #{isPublished},#{updateTime},#{createTime},
+                        #{flag},#{viewCount},#{user.userId},#{type.typeId}
+        )
+    </insert>
+    <insert id="saveTags">
+        insert into t_blog_tag values
+        <foreach collection="tags" separator="," item="tag">
+            (
+            #{blog.blogId},
+            #{tag.tagId}
+            )
+        </foreach>
+    </insert>
+    <delete id="removeBlog">
+        delete from t_blog where blog_id = #{blogId}
+    </delete>
+    <delete id="removeTags">
+        delete from t_blog_tag where blog_id = #{blogId}
+    </delete>
+
+    <update id="updateBlog">
+        update t_blog set title = #{title},blog_content=#{blogContent},
+    description = #{description}, first_img=#{firstImg},is_recommended=#{isRecommended},
+    is_published = #{isPublished},update_time=#{updateTime},flag=#{flag},type_id=#{type.typeId}
+        where blog_id = #{blogId}
+    </update>
+
+    <select id="searchBlogs" resultMap="blogResultMap">
+        select blog_id, title, blog_content, description, first_img,
+        is_recommended, is_published,  create_time,
+        flag,view_count,t_type.type_id,type_name,tag_id,tag_name
+        from t_blog natural join t_type natural join t_blog_tag natural join t_tag
+        <where>
+            <if test="type">
+                and type_id = #{type.typeId}
+            </if>
+            <if test="tags">
+                and blog_id in 
+                (select blog_id from t_blog_tag where tag_id in
+                <foreach collection="tags" item="tag" separator=",">
+                    (
+                        #{tagId}
+                    )
+                </foreach>
+                )
+            </if>
+            <if test="content">
+                and (blog_content like #{content}
+                or title like #{content}
+                or description like #{content})
+            </if>
+<!--            <if test="1">-->
+<!--                and t_blog.type_id = t_type.type_id-->
+<!--                and t_blog.blog_id = t_blog_tag.blog_id-->
+<!--                and t_blog.tag_id = t_tag.tag_name-->
+<!--            </if>-->
+        </where>
+    </select>
+    <select id="selectBlogByPage" resultMap="blogResultMap">
+        select blog_id, title, blog_content, description, first_img,
+        is_recommended, is_published,  create_time,
+        flag,view_count,t_type.type_id,type_name,tag_id,tag_name,update_time
+        from t_blog natural join t_type natural join t_blog_tag natural join t_tag
+
+    </select>
+    <select id="selectBlogById" resultMap="blogResultMap">
+        select blog_id, title, blog_content, description, first_img,
+               is_recommended, is_published,  create_time,
+               flag,view_count,t_type.type_id,type_name,tag_id,tag_name,update_time
+        from t_blog natural join t_type natural join t_blog_tag natural join t_tag
+        where t_blog.blog_id = #{blogId}
+    </select>
+    <select id="listBlogs" resultMap="blogResultMap">
+        select blog_id, title, blog_content, description, first_img,
+               is_recommended, is_published,  create_time,
+               flag,view_count,t_type.type_id,type_name,tag_id,tag_name,update_time
+        from t_blog natural join t_type natural join t_blog_tag natural join t_tag
+
+    </select>
+    <select id="selectBlogsByTypeId" resultMap="blogResultMap">
+        select blog_id, title, blog_content, description, first_img,
+               is_recommended, is_published,  create_time,
+               flag,view_count,t_type.type_id,type_name,tag_id,tag_name,update_time
+        from t_blog natural join t_type natural join t_blog_tag natural join t_tag
+        where t_type.type_id = #{typeId}
+    </select>
+    <select id="selectBlogsByTagId" resultMap="blogResultMap">
+        select blog_id, title, blog_content, description, first_img,
+               is_recommended, is_published,  create_time,
+               flag,view_count,t_type.type_id,type_name,tag_id,tag_name,update_time
+        from t_blog natural join t_type natural join t_blog_tag natural join t_tag
+        where t_tag.tag_id = #{tagId}
+    </select>
+</mapper>
