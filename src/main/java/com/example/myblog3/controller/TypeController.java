@@ -7,11 +7,9 @@ import com.example.myblog3.util.PageRequest;
 import com.example.myblog3.util.PageResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpSession;
 import java.util.List;
 
 @Controller
@@ -19,15 +17,41 @@ import java.util.List;
 public class TypeController {
     @Autowired
     private TypeService typeService;
+    @Autowired
     private BlogService blogService;
     @GetMapping
     public String type(){
         return "type";
     }
-    @GetMapping("/{typeId}")
+
+    @PostMapping("/{typeId}")
     @ResponseBody
-    public PageResult getBlogsByTypeId(@PathVariable Long typeId, PageRequest pageRequest){
-        return blogService.listBlogsByTagId(typeId, pageRequest);
+    public PageResult getBlogsByTypeId(@PathVariable String typeId,
+                                       @RequestBody PageRequest pageRequest){
+        Long id = Long.valueOf(typeId);
+        return blogService.listBlogsByTypeId(id, pageRequest);
+    }
+    @GetMapping("/getBlogs")
+    public String getBlogs(Long typeId, HttpSession session){
+        session.setAttribute("typeId",typeId);
+        return "type";
     }
 
+    @ResponseBody
+    @PostMapping("/getBlogsByTypeId")
+    public PageResult getBlogsByPage(@RequestBody PageRequest pageRequest,HttpSession session){
+            PageResult result = null;
+            System.out.println(pageRequest);
+
+            Long typeId = (Long)session.getAttribute("typeId");
+            if(typeId == null){
+                result = blogService.findBlogByPage(pageRequest);
+            }else {
+                System.out.println("========");
+                result = blogService.listBlogsByTypeId(typeId,pageRequest);
+                session.setAttribute("typeId",null);
+            }
+
+        return result;
+    }
 }

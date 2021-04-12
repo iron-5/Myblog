@@ -24,4 +24,5 @@ public interface BlogMapper {
     Blog selectBlogById(Long blogId);
     List<Blog> selectBlogsByTypeId(Long typeId);
     List<Blog> selectBlogsByTagId(Long tagId);
+    List<Blog> selectBlogsByTags(List<Long> tags);
 }

@@ -71,7 +71,11 @@ class BlogServiceImplTest {
 
     @Test
     void findBlogByPage() {
-
+        PageRequest pageRequest = new PageRequest();
+        pageRequest.setPageSize(2);
+        pageRequest.setPageNum(1);
+        PageResult result = blogService.findBlogByPage(pageRequest);
+        System.out.println(result);
     }
 
     @Test

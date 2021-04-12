@@ -120,7 +120,7 @@
                         </div>
                         <div class="ui teal segment">
                             <div class="ui fluid vertical menu">
-                                <a href="" class="item" v-for="type in types">{{type.typeName}}
+                                <a :href="getTypeUrl(type)" class="item" v-for="type in types">{{type.typeName}}
                                     <div class="ui label teal">13</div>
                                 </a>
                                                             
@@ -133,12 +133,13 @@
                         <div class="ui secondary segment">
                             <div class="ui two column grid">
                                 <div class="column"><i class="icon tags"></i>标签</div>
-                                <div class="right aligned column"><a href="">more<i
+                                <div class="right aligned column"><a href="/type">more<i
                                             class="icon angle double right"></i></a></div>
                             </div>
                         </div>
                         <div class="ui teal segment">
-                            <a class="ui teal basic left pointing label my-margin-tiny" v-for="tag in tags">{{tag.tagName}}
+                            <a class="ui teal basic left pointing label my-margin-tiny" v-for="tag in tags"
+                            :href="getTagUrl(tag)">{{tag.tagName}}
                                 <div class="detail">12</div>
                             </a>
 
@@ -235,6 +236,12 @@
                 },
                 getUrl(blogId){
                     return "/blog/content/"+blogId;
+                },
+                getTypeUrl(type){
+                    return "/type/getBlogs?typeId="+type.typeId;
+                },
+                getTagUrl(tag){
+                    return "/tag/"+tag.tagId;
                 }
             },
 

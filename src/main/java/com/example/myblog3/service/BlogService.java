@@ -22,4 +22,5 @@ public interface BlogService {
     List<Blog> listBlog();
     PageResult listBlogsByTypeId(Long typeId, PageRequest pageRequest);
     PageResult listBlogsByTagId(Long tagId, PageRequest pageRequest);
+    List<Blog> listBlogsByTags(List<Long> tags);
 }

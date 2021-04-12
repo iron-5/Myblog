@@ -20,7 +20,7 @@
         <div class="ui container">
             <div class="ui menu stackable">
                 <a href="#" class="item my-font-dark my-font-blod my-font-large "><i class="icon home"></i>首页</a>
-                <a href="/blog" class="item my-font-dark my-font-blod my-font-large active"><i class="icon book"></i>博客</a>
+                <a href="/blog" class="item my-font-dark my-font-blod my-font-large"><i class="icon book"></i>博客</a>
                 <a href="/type" class="item my-font-dark my-font-blod my-font-large"><i class="icon flag"></i>分类</a>
                 <a href="/tag" class="item my-font-dark my-font-blod my-font-large active"><i class="icon tag"></i>标签</a>
                 <a href="#" class="item my-font-dark my-font-blod my-font-large"><i class="icon user"></i>归档</a>
@@ -54,7 +54,7 @@
             <!-- 标签一栏 -->
             <div class="ui attached segment">
                 <div class="ui basic segment">
-                    <a class="ui teal basic left pointing label my-margin-tiny" v-for="tag in tags">{{tag.tagName}}
+                    <a class="ui teal basic left pointing label my-margin-tiny" v-for="tag in tags" @click="getBlogs(tag)">{{tag.tagName}}
                         <div class="detail">12</div>
                     </a>
                 </div>
@@ -152,18 +152,20 @@
         const container = new Vue({
             el:"#container",
             data:{
+                page:'',
                 blogs:'',
                 tags:'',
                 types:'',
                 pageRequest:{
                     pageNum:1,
                     pageSize:6
-                }
+                },
+                curTagId:[]
             },
             methods:{
-                getBlogs(){
+                initBlogs(){
                     let _this = this;
-                    axios.get("/admin/blog/getBlogs?pageNum="+
+                    axios.get("/tag/getBlogs?pageNum="+
                         this.pageRequest.pageNum+"&pageSize="+this.pageRequest.pageSize).then(
                         function(response){
                             _this.page=response.data;
@@ -171,14 +173,7 @@
                         }
                     )
                 },
-                getTypes(){
-                    let _this = this;
-                    axios.get("/admin/type/getTypes").then(
-                        function(response){
-                            _this.types = response.data;
-                        }
-                    )
-                },
+
                 getTags(){
                     let _this = this;
                     axios.get("/admin/tag/getTags").then(
@@ -186,10 +181,38 @@
                             _this.tags = response.data;
                         }
                     )
+                },
+                getBlogs(tag){
+                    let tagId = tag.tagId;
+
+                    if(this.curTagId.includes(tagId)){
+                        this.curTagId.splice(this.getIndex(this.curTagId,tagId),1);
+                    }else{
+                        this.curTagId.push(tagId);
+                    }
+                    console.log(this.curTagId);
+
+                    if(this.curTagId.length==0) this.initBlogs();
+                    else {
+                        let _this = this;
+                        axios.post("/tag/getBlogsByTagId", this.curTagId).then(
+                            function (response) {
+                                _this.blogs = response.data;
+                            }
+                        )
+                    }
+                },
+                getIndex(array,item){
+                    for(var i =0;i++;i<array.length){
+                        if(array[i] == item){
+                            return i;
+                        }
+                    }
+                    return -1;
                 }
             },
             mounted(){
-                this.getBlogs();
+                this.initBlogs();
                 this.getTags();
             }
         })

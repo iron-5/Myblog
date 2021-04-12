@@ -52,8 +52,8 @@
 
             <!-- 分类一栏 -->
             <div class="ui attached segment">
-                <div class="ui labeled  button my-margin-tiny" v-for="type in types">
-                    <a href="" class="ui teal basic button">{{type.typeName}}</a>
+                <div class="ui labeled  button my-margin-tiny "  v-for="type in types">
+                    <a class="ui teal  button basic" @click="getBlogs(type)" >{{type.typeName}}</a>
                     <div class="ui basic teal label left pointing">13</div>
                 </div>
 
@@ -151,6 +151,7 @@
         const container = new Vue({
                 el:"#container",
                 data:{
+                    curType:'',
                     blogs:'',
                     tags:'',
                     types:'',
@@ -160,10 +161,10 @@
                     }
                 },
                 methods:{
-                    getBlogs(){
+                    initBlogs(){
                         let _this = this;
-                        axios.get("/admin/blog/getBlogs?pageNum="+
-                            this.pageRequest.pageNum+"&pageSize="+this.pageRequest.pageSize).then(
+                        axios.post("/type/getBlogsByTypeId",
+                            {pageRequest:this.pageRequest}).then(
                             function(response){
                                 _this.page=response.data;
                                 _this.blogs = response.data.content;
@@ -178,17 +179,29 @@
                             }
                         )
                     },
-                    getTags(){
+                    clearPageRequest(){
+                        this.pageRequest.pageNum=1;
+                        this.pageRequest.pageSize=6;
+                    },
+                    getBlogs(type){
                         let _this = this;
-                        axios.get("/admin/tag/getTags").then(
+                        this.curType = type;
+                        console.log(this.curType);
+                       // console.log(this.pageRequest);
+                        //console.log(type.typeId);
+                        //var qs = require('qs');qs.stringify(
+                        axios.post("/type/"+type.typeId, this.pageRequest
+                            ).then(
                             function(response){
-                                _this.tags = response.data;
+                                _this.page=response.data;
+                                _this.blogs = response.data.content;
                             }
                         )
                     }
+
                 },
                 mounted(){
-                    this.getBlogs();
+                    this.initBlogs();
                     this.getTypes();
                 }
             })

@@ -124,7 +124,7 @@
                is_recommended, is_published,  create_time,
                flag,view_count,t_type.type_id,type_name,tag_id,tag_name,update_time
         from t_blog natural join t_type natural join t_blog_tag natural join t_tag
-        where t_type.type_id = #{typeId}
+        where t_blog.type_id = #{typeId}
     </select>
     <select id="selectBlogsByTagId" resultMap="blogResultMap">
         select blog_id, title, blog_content, description, first_img,
@@ -132,5 +132,16 @@
                flag,view_count,t_type.type_id,type_name,tag_id,tag_name,update_time
         from t_blog natural join t_type natural join t_blog_tag natural join t_tag
         where t_tag.tag_id = #{tagId}
+    </select>
+    <select id="selectBlogsByTags" resultMap="blogResultMap">
+        select blog_id, title, blog_content, description, first_img,
+               is_recommended, is_published,  create_time,
+               flag,view_count,t_type.type_id,type_name,tag_id,tag_name,update_time
+        from t_blog natural join t_type natural join t_blog_tag natural join t_tag
+        where t_blog_tag.tag_id in (<foreach collection="tags" item="tag" separator=",">
+
+        #{tag}
+
+    </foreach>)
     </select>
 </mapper>

@@ -17,7 +17,7 @@
         select * from t_type
     </select>
     <select id="listType" resultType="type">
-        select * from t_type order by type_id;
+        select * from t_type
     </select>
     <select id="selectTypeById" resultType="Type">
         select * from t_type where type_id = #{typeId}

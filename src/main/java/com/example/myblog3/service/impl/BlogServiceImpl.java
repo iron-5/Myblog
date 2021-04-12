@@ -109,10 +109,15 @@ public class BlogServiceImpl implements BlogService {
         return PageUtils.getPageResult(pageRequest, getPageInfo(pageRequest, blogs));
     }
 
+    @Override
+    public List<Blog> listBlogsByTags(List<Long> tags) {
+        return blogMapper.selectBlogsByTags(tags);
+    }
+
     private PageInfo<Blog> getPageInfo(PageRequest pageRequest, List<Blog> blogMenus) {
         int pageNum = pageRequest.getPageNum();
         int pageSize = pageRequest.getPageSize();
-        PageHelper.startPage(pageNum, pageSize,"blog_id");
+        PageHelper.startPage(pageNum, pageSize);
         return new PageInfo<Blog>(blogMenus);
     }
 

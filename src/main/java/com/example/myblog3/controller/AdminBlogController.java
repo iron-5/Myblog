@@ -27,7 +27,6 @@ public class AdminBlogController {
     @ResponseBody
     @GetMapping("/getBlogs")
     public PageResult getBlogs(PageRequest pageRequest){
-        System.out.println(pageRequest);
         return blogService.findBlogByPage(pageRequest);
     }
     @PostMapping("/search")
@@ -74,7 +73,7 @@ public class AdminBlogController {
 
     @PostMapping("/save")
     private String saveBlog(Blog blog,HttpSession session){
-        System.out.println(blog);
+
         if(blog.getBlogId()!=null){
             Blog oldBlog = blogService.getBlogById(blog.getBlogId());
             blogService.updateBlog(oldBlog,blog);

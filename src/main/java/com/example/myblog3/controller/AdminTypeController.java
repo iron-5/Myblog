@@ -23,7 +23,7 @@ public class AdminTypeController {
     }
     @ResponseBody
     @PostMapping("/getTypes")
-    public PageResult getTypes(PageRequest pageRequest){
+    public PageResult getTypes(@RequestBody PageRequest pageRequest){
         return typeService.findTypeByPage(pageRequest);
     }
 
